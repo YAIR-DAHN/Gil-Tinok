@@ -50,8 +50,9 @@
         }
 
         .photo-container {
-            width: 150px;
-            height: 150px;
+            position: relative;
+            width: 250px;
+            height: 250px;
             border-radius: 50%;
             overflow: hidden;
             margin: 0 auto 30px;
@@ -412,6 +413,98 @@
             max-width: 200px;
             margin: 0 auto;
         }
+
+        /* אנימציית קונפטי בימי הולדת */
+        @keyframes confetti {
+            0% { transform: translateY(0) rotate(0deg); }
+            100% { transform: translateY(100vh) rotate(360deg); }
+        }
+
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background: #ffd700;
+            clip-path: polygon(50% 0%, 90% 20%, 100% 60%, 75% 100%, 25% 100%, 0% 60%, 10% 20%);
+            animation: confetti 4s ease-in-out infinite;
+        }
+
+        /* סגנון מיוחד ליום הולדת */
+        .birthday-mode {
+            animation: rainbow 10s linear infinite;
+        }
+
+        @keyframes rainbow {
+            0% { background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%); }
+            25% { background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%); }
+            50% { background: linear-gradient(135deg, #d4fc79 0%, #96e6a1 100%); }
+            75% { background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%); }
+            100% { background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%); }
+        }
+
+        .nav-button {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.8);
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            font-size: 20px;
+            cursor: pointer;
+            z-index: 2;
+            opacity: 0;
+            transition: opacity 0.3s ease, background 0.3s ease;
+        }
+
+        .photo-container:hover .nav-button {
+            opacity: 1;
+        }
+
+        .prev-button {
+            left: 10px;
+        }
+
+        .next-button {
+            right: 10px;
+        }
+
+        .nav-button:hover {
+            background: rgba(255, 255, 255, 0.95);
+        }
+
+        .image-counter {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.6);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .photo-container:hover .image-counter {
+            opacity: 1;
+        }
+
+        /* עדכונים למצב כהה */
+        body.dark-mode .nav-button {
+            background: rgba(50, 50, 50, 0.8);
+            color: white;
+        }
+
+        body.dark-mode .nav-button:hover {
+            background: rgba(70, 70, 70, 0.95);
+        }
+
+        .photo-container img {
+            transition: opacity 0.2s ease-in-out;
+        }
     </style>
 </head>
 <body>
@@ -441,9 +534,12 @@
         </div>
     </div>
     <div class="container">
-        <div class="header">המתוק שלנו</div>
+        <div class="header">יוסף שמעון שלנו</div>
         <div class="photo-container">
-            <img src="./img/3.jpg" alt="תמונה של התינוק" />
+            <button class="nav-button prev-button">❮</button>
+            <img id="babyImage" src="./img/1.jpg" alt="תמונה של התינוק" />
+            <button class="nav-button next-button">❯</button>
+            <div class="image-counter">תמונה <span id="currentImageNum">1</span> מתוך <span id="totalImages">1</span></div>
         </div>
         <div id="birth-date">נולד ביום ראשון, 17/11/24 בשעה 16:07</div>
         <div class="age-display">
@@ -547,15 +643,15 @@
             const months = Math.floor(totalDays / 30.44);
             const years = Math.floor(months / 12);
 
-            const days = totalDays % 30;
+            const remainingDays = totalDays - (weeks * 7);
             const hours = totalHours % 24;
             const minutes = totalMinutes % 60;
             const seconds = totalSeconds % 60;
 
             updateDisplay('years', years);
             updateDisplay('months', months % 12);
-            updateDisplay('weeks', weeks % 4);
-            updateDisplay('days', days);
+            updateDisplay('weeks', weeks);
+            updateDisplay('days', remainingDays);
             updateDisplay('hours', hours);
             updateDisplay('minutes', minutes);
             
@@ -571,8 +667,8 @@
                 totalText += `${months} חודשים`;
             } else if (weeks > 0) {
                 totalText += `${weeks} שבועות`;
-            } else if (totalDays > 0) {
-                totalText += `${totalDays} ימים`;
+            } else if (remainingDays > 0) {
+                totalText += `${remainingDays} ימים`;
             } else if (totalHours > 0) {
                 totalText += `${totalHours} שעות`;
             } else if (totalMinutes > 0) {
@@ -628,6 +724,146 @@
         document.querySelector('.settings-toggle').addEventListener('click', () => {
             document.querySelector('.settings-panel').classList.toggle('open');
         });
+
+        // בדיקה האם היום יום הולדת
+        function checkBirthday() {
+            const now = new Date();
+            const birthDate = new Date(2024, 10, 17);
+            
+            if (now.getDate() === birthDate.getDate() && 
+                now.getMonth() === birthDate.getMonth()) {
+                document.body.classList.add('birthday-mode');
+                createConfetti();
+                if (!document.getElementById('birthday-message')) {
+                    const message = document.createElement('div');
+                    message.id = 'birthday-message';
+                    message.style.cssText = 'position: fixed; top: 20px; right: 20px; background: #fff; padding: 15px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); z-index: 1000;';
+                    message.textContent = '🎉 יום הולדת שמח! 🎂';
+                    document.body.appendChild(message);
+                }
+            } else {
+                document.body.classList.remove('birthday-mode');
+            }
+        }
+
+        // יצירת אפקט קונפטי
+        function createConfetti() {
+            for (let i = 0; i < 50; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.animationDelay = Math.random() * 3 + 's';
+                confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
+                document.body.appendChild(confetti);
+                
+                setTimeout(() => confetti.remove(), 4000);
+            }
+        }
+
+        // הוספת הקוד החדש בתחילת הסקריפט
+        let currentImageIndex = 1;
+        let totalImages = 1;
+
+        function checkImageExists(url) {
+            return new Promise((resolve) => {
+                const img = new Image();
+                img.onload = () => resolve(true);
+                img.onerror = () => resolve(false);
+                img.src = url;
+            });
+        }
+
+        async function findLastImage() {
+            let lastIndex = 1;
+            while (await checkImageExists(`./img/${lastIndex}.jpg`)) {
+                lastIndex++;
+            }
+            return lastIndex - 1;
+        }
+
+        async function initializeImageGallery() {
+            totalImages = await findLastImage();
+            if (totalImages === 0) {
+                console.error('לא נמצאו תמונות בתיקייה');
+                return;
+            }
+            
+            document.getElementById('totalImages').textContent = totalImages;
+            
+            const prevButton = document.querySelector('.prev-button');
+            const nextButton = document.querySelector('.next-button');
+            
+            prevButton.addEventListener('click', () => changeImage(-1));
+            nextButton.addEventListener('click', () => changeImage(1));
+
+            // הצג את התמונה האחרונה כברירת מחדל
+            currentImageIndex = totalImages;
+            updateImage();
+
+            // הוספת תמיכה בהחלקה (swipe) למובייל
+            let touchStartX = 0;
+            const photoContainer = document.querySelector('.photo-container');
+            
+            photoContainer.addEventListener('touchstart', (e) => {
+                touchStartX = e.touches[0].clientX;
+            }, false);
+            
+            photoContainer.addEventListener('touchend', (e) => {
+                const touchEndX = e.changedTouches[0].clientX;
+                const diff = touchStartX - touchEndX;
+                
+                if (Math.abs(diff) > 50) { // מינימום מרחק להחלקה
+                    if (diff > 0) { // החלקה שמאלה
+                        changeImage(1);
+                    } else { // החלקה ימינה
+                        changeImage(-1);
+                    }
+                }
+            }, false);
+        }
+
+        function changeImage(direction) {
+            currentImageIndex += direction;
+            if (currentImageIndex > totalImages) currentImageIndex = 1;
+            if (currentImageIndex < 1) currentImageIndex = totalImages;
+            updateImage();
+        }
+
+        function updateImage() {
+            const img = document.getElementById('babyImage');
+            const newSrc = `./img/${currentImageIndex}.jpg`;
+            
+            // אנימציית fade
+            img.style.opacity = '0';
+            setTimeout(() => {
+                img.src = newSrc;
+                img.style.opacity = '1';
+            }, 200);
+            
+            document.getElementById('currentImageNum').textContent = currentImageIndex;
+        }
+
+        // הוספת מאזין למקשי המקלדת
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') changeImage(1);
+            if (e.key === 'ArrowRight') changeImage(-1);
+        });
+
+        // קוסיף גם סגנונות חדשים לאנימציית fade
+        const styleSheet = document.createElement('style');
+        styleSheet.textContent = `
+            .photo-container img {
+                transition: opacity 0.2s ease-in-out;
+            }
+        `;
+        document.head.appendChild(styleSheet);
+
+        // קריאה לפונקציית האתחול
+        initializeImageGallery();
+
+        // הפעלת בדיקת יום הולדת
+        checkBirthday();
+        setInterval(checkBirthday, 1000 * 60 * 60); // בדיקה כל שעה
     </script>
 </body>
 </html>
