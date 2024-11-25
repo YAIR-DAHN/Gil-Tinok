@@ -12,6 +12,7 @@
             margin: 0;
             padding: 0;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
@@ -25,15 +26,20 @@
             background: rgba(255, 255, 255, 0.95);
             border-radius: 30px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            padding: 40px;
+            padding: 20px;
             width: 90%;
-            max-width: 600px;
+            max-width: 1200px;
+            margin: 20px auto;
             position: relative;
             -webkit-backdrop-filter: blur(10px);
             backdrop-filter: blur(10px);
             transform: translateY(0);
-            transition: transform 0.3s ease;
             transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 30px;
+            animation: fadeIn 0.5s ease;
         }
 
         .container:hover {
@@ -84,15 +90,18 @@
 
         .age-display {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 20px;
-            margin: 30px 0;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 15px;
+            width: 100%;
+            max-width: 1000px;
+            margin: 20px auto;
         }
 
         .age-box {
+            min-width: unset;
+            padding: 15px 10px;
             background: white;
             border-radius: 20px;
-            padding: 20px;
             font-size: 1.1rem;
             font-weight: 500;
             color: #1565c0;
@@ -192,32 +201,22 @@
             border-radius: 15px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
             width: 250px;
-            transform: translateX(-280px);
-            transition: transform 0.3s ease;
+            visibility: hidden;
+            opacity: 0;
+            transition: visibility 0.3s, opacity 0.3s ease;
             z-index: 1000;
         }
 
         .settings-panel.open {
-            transform: translateX(0);
+            visibility: visible;
+            opacity: 1;
         }
 
         .settings-toggle {
             position: fixed;
             left: 20px;
             top: 20px;
-            background: white;
-            padding: 15px;
-            border-radius: 50%;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            cursor: pointer;
             z-index: 1001;
-            transition: all 0.3s ease;
-            font-size: 1.5rem;
-        }
-
-        .settings-toggle:hover {
-            transform: rotate(30deg);
-            background: #f5f5f5;
         }
 
         .setting-item {
@@ -505,6 +504,420 @@
         .photo-container img {
             transition: opacity 0.2s ease-in-out;
         }
+
+        /* סגנונות לאבני דרך */
+        .milestones-section, .growth-chart-section {
+            width: 90%;
+            max-width: 1000px;
+            margin: 30px auto;
+            padding: 30px;
+        }
+
+        .timeline {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            padding: 40px 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            width: 2px;
+            height: 100%;
+            background: #2196F3;
+            transform: translateX(-50%);
+        }
+
+        .milestone {
+            width: 100%;
+            max-width: 600px;
+            margin: 30px 0;
+            position: relative;
+        }
+
+        .milestone::before {
+            content: attr(data-date);
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #fff;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.9em;
+            color: #666;
+            z-index: 2;
+        }
+
+        .milestone-content {
+            width: 90%;
+            max-width: 400px;
+            margin: 0 auto;
+            z-index: 1;
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease;
+        }
+
+        .milestone-content::before {
+            content: '';
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            background: #2196F3;
+            border-radius: 50%;
+            left: 50%;
+            transform: translateX(-50%);
+            top: -30px;
+        }
+
+        /* סגנונות לגרף */
+        .growth-chart-section {
+            margin-top: 30px;
+            padding: 30px;
+        }
+
+        .chart-controls {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .chart-btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 20px;
+            background: #e0e0e0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .chart-btn.active {
+            background: #2196F3;
+            color: white;
+        }
+
+        /* עדכונים למצב כהה */
+        body.dark-mode .milestones-section,
+        body.dark-mode .growth-chart-section {
+            background: rgba(30, 30, 30, 0.95);
+            color: #fff;
+        }
+
+        body.dark-mode .milestone-content {
+            background: #333;
+            color: #fff;
+        }
+
+        body.dark-mode .milestone::before {
+            color: #90caf9;
+        }
+
+        /* עדכון למסכים קטנים */
+        @media (max-width: 768px) {
+            .container, .milestones-section, .growth-chart-section {
+                width: 95%;
+                padding: 15px;
+                margin: 10px auto;
+            }
+
+            .header {
+                font-size: 2rem;
+            }
+
+            .age-display {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .photo-container {
+                width: 200px;
+                height: 200px;
+            }
+
+            .milestone::before {
+                font-size: 0.8em;
+            }
+
+            .chart-controls {
+                flex-wrap: wrap;
+            }
+
+            .chart-btn {
+                font-size: 0.9em;
+                padding: 6px 12px;
+            }
+        }
+
+        /* עדכון למסכים גדולים */
+        @media (min-width: 1024px) {
+            .container {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 30px;
+                align-items: center;
+            }
+
+            .header {
+                grid-column: 1 / -1;
+            }
+
+            .photo-container {
+                grid-row: span 2;
+                width: 300px;
+                height: 300px;
+                margin: 0 auto;
+            }
+
+            .age-display {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .total {
+                grid-column: 1 / -1;
+            }
+        }
+
+        /* שיפור נראות הגרף */
+        .growth-chart-section {
+            margin-top: 30px;
+            padding: 30px;
+        }
+
+        .chart-controls {
+            margin-bottom: 30px;
+        }
+
+        canvas#growthChart {
+            max-height: 400px;
+            margin: 0 auto;
+        }
+
+        /* שיפור נראות אבני הדרך */
+        .milestone-content {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease;
+        }
+
+        .milestone-content:hover {
+            transform: translateY(-5px);
+        }
+
+        .milestone h3 {
+            color: #2196F3;
+            margin-bottom: 10px;
+        }
+
+        /* עיצוב כותרות */
+        .milestones-section h2, .growth-chart-section h2 {
+            color: #2196F3;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 1.8rem;
+        }
+
+        /* שיפור נראות במצב כהה */
+        body.dark-mode .milestone-content:hover {
+            background: #444;
+        }
+
+        body.dark-mode .milestone h3 {
+            color: #90caf9;
+        }
+
+        /* סגנונות לתפריט הבחירה */
+        .baby-selector {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .baby-option {
+            padding: 8px 16px;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .baby-option.active {
+            background: #2196F3;
+            color: white;
+        }
+
+        .baby-option:not(.active):hover {
+            background: rgba(33, 150, 243, 0.1);
+        }
+
+        /* סגנונות למצב בת */
+        body.girl-mode {
+            background: linear-gradient(135deg, #fff0f3 0%, #ffd1dc 100%);
+        }
+
+        body.girl-mode .container {
+            background: rgba(255, 245, 247, 0.95);
+        }
+
+        body.girl-mode .header {
+            background: linear-gradient(45deg, #ff69b4, #ff1493);
+            -webkit-background-clip: text;
+        }
+
+        body.girl-mode .age-box {
+            color: #ff69b4;
+        }
+
+        body.girl-mode .age-value {
+            color: #ff1493;
+        }
+
+        body.girl-mode .total {
+            background: linear-gradient(45deg, #ffe4e1, #ffd1dc);
+        }
+
+        body.girl-mode .baby-option.active {
+            background: #ff69b4;
+        }
+
+        /* עדכון למצב כהה */
+        body.dark-mode.girl-mode {
+            background: linear-gradient(135deg, #4a0012 0%, #800020 100%);
+        }
+
+        body.dark-mode .baby-selector {
+            background: rgba(30, 30, 30, 0.95);
+            color: #fff;
+        }
+
+        @media (max-width: 768px) {
+            .baby-selector {
+                position: fixed;
+                top: 0;
+                right: 0;
+                left: 0;
+                padding: 10px;
+                background: rgba(255, 255, 255, 0.95);
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+                display: flex;
+                justify-content: center;
+                gap: 15px;
+                backdrop-filter: blur(10px);
+            }
+
+            .baby-option {
+                padding: 8px 16px;
+                font-size: 1rem;
+                background: rgba(255, 255, 255, 0.2);
+                border-radius: 20px;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            }
+
+            .container {
+                margin-top: 60px; /* מרווח עבור תפריט הבחירה */
+            }
+
+            /* עדכון גודל תיבות הגיל במובייל */
+            .age-display {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 10px;
+                padding: 10px;
+            }
+
+            .age-box {
+                padding: 10px 5px;
+            }
+
+            .age-value {
+                font-size: 1.2rem;
+            }
+
+            .age-label {
+                font-size: 0.8rem;
+            }
+
+            /* התאמת גודל התמונה למובייל */
+            .photo-container {
+                width: 180px;
+                height: 180px;
+            }
+        }
+
+        /* עדכון סגנון תיבת השניות */
+        .seconds-box {
+            display: flex !important;
+            flex-direction: column-reverse;
+            align-items: center;
+        }
+
+        /* שיפור נראות במצב כהה במובייל */
+        @media (max-width: 768px) {
+            body.dark-mode .baby-selector {
+                background: rgba(30, 30, 30, 0.95);
+            }
+
+            body.dark-mode .baby-option {
+                background: rgba(50, 50, 50, 0.2);
+            }
+        }
+
+        /* נוסיף סגנונות חדשים לאנימציית מעבר */
+        .container {
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { 
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* אנימציית החלפת ילד */
+        .fade-out {
+            animation: fadeOut 0.3s ease forwards;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.3s ease forwards;
+        }
+
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+                transform: scale(1);
+            }
+            to {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+        }
+
+        /* עדכון סגנון למצב מעבר */
+        .container.switching {
+            pointer-events: none;
+        }
+
+        /* תיקון backdrop-filter */
+        @media (max-width: 768px) {
+            .baby-selector {
+                -webkit-backdrop-filter: blur(10px);
+                backdrop-filter: blur(10px);
+            }
+        }
     </style>
 </head>
 <body>
@@ -572,7 +985,54 @@
         <div class="footer">מתעדכן בזמן אמת</div>
     </div>
 
+    <div class="milestones-section">
+        <h2>אבני דרך התפתחותיות</h2>
+        <div class="timeline">
+            <div class="milestone" data-date="17/11/2024">
+                <div class="milestone-content">
+                    <h3>לידה 👶</h3>
+                    <p>משקל: 3.2 ק"ג</p>
+                    <p>גובה: 50 ס"מ</p>
+                </div>
+            </div>
+            <!-- יתווספו אבני דרך נוספות דינמית -->
+        </div>
+    </div>
+
+    <div class="growth-chart-section">
+        <h2>גרף התפתחות</h2>
+        <div class="chart-controls">
+            <button class="chart-btn active" data-type="weight">משקל</button>
+            <button class="chart-btn" data-type="height">גובה</button>
+        </div>
+        <canvas id="growthChart"></canvas>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     <script>
+        // נגדיר קודם את הנתונים הגלובליים
+        const babiesData = {
+            yosef: {
+                name: 'יוסף שמעון שלנו',
+                birthDate: new Date(2024, 10, 17, 16, 7),
+                imgFolder: './img/',
+                gender: 'boy',
+                showExtras: true
+            },
+            avital: {
+                name: 'אביטל שלנו',
+                birthDate: new Date(2022, 6, 15, 14, 38),
+                imgFolder: './img/avital/',
+                gender: 'girl',
+                showExtras: false
+            }
+        };
+
+        let currentBaby = localStorage.getItem('selectedBaby') || 'yosef';
+        let currentImageIndex = 1;
+        let totalImages = 1;
+
         // הגדרות ברירת מחדל
         let settings = {
             showZeros: false,
@@ -580,7 +1040,105 @@
             darkMode: false
         };
 
-        // פונקציות הגדרות
+        // פונקציית חישוב הגיל
+        function calculateAge() {
+            const birthDate = babiesData[currentBaby].birthDate;
+            const now = new Date();
+            const diff = now - birthDate;
+            
+            const totalSeconds = Math.floor(diff / 1000);
+            const totalMinutes = Math.floor(diff / (1000 * 60));
+            const totalHours = Math.floor(diff / (1000 * 60 * 60));
+            const totalDays = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const weeks = Math.floor(totalDays / 7);
+            const months = Math.floor(totalDays / 30.44);
+            const years = Math.floor(months / 12);
+
+            const remainingDays = totalDays - (weeks * 7);
+            const hours = totalHours % 24;
+            const minutes = totalMinutes % 60;
+            const seconds = totalSeconds % 60;
+
+            updateDisplay('years', years);
+            updateDisplay('months', months % 12);
+            updateDisplay('weeks', weeks);
+            updateDisplay('days', remainingDays);
+            updateDisplay('hours', hours);
+            updateDisplay('minutes', minutes);
+            
+            if (settings.showSeconds) {
+                updateDisplay('seconds', seconds);
+            }
+
+            let totalText = 'סה"כ: ';
+            if (years > 0) {
+                totalText += `${years} שנים`;
+            } else if (months > 0) {
+                totalText += `${months} חודשים`;
+            } else if (weeks > 0) {
+                totalText += `${weeks} שבועות`;
+            } else if (totalDays > 0) {
+                totalText += `${totalDays} ימים`;
+            } else if (totalHours > 0) {
+                totalText += `${totalHours} שעות`;
+            } else if (totalMinutes > 0) {
+                totalText += `${totalMinutes} דקות`;
+            } else {
+                totalText += `${totalSeconds} שניות`;
+            }
+            document.getElementById('total').textContent = totalText;
+        }
+
+        // פונקציית החלפת תינוק
+        function switchBaby(babyId) {
+            const container = document.querySelector('.container');
+            const babyData = babiesData[babyId];
+            
+            // אנימציית יציאה
+            container.classList.add('fade-out');
+            
+            setTimeout(() => {
+                currentBaby = babyId;
+                
+                // עדכון הממשק
+                document.querySelector('.header').textContent = babyData.name;
+                document.body.classList.toggle('girl-mode', babyData.gender === 'girl');
+                
+                const dateOptions = { weekday: 'long', year: 'numeric', month: '2-digit', day: '2-digit' };
+                const birthDateStr = babyData.birthDate.toLocaleDateString('he-IL', dateOptions);
+                const timeStr = babyData.birthDate.toLocaleTimeString('he-IL', { hour: '2-digit', minute: '2-digit' });
+                document.getElementById('birth-date').textContent = `נולד${babyData.gender === 'girl' ? 'ה' : ''} ביום ${birthDateStr} בשעה ${timeStr}`;
+                
+                const extrasElements = document.querySelectorAll('.milestones-section, .growth-chart-section');
+                extrasElements.forEach(el => {
+                    el.style.display = babyData.showExtras ? 'block' : 'none';
+                });
+                
+                // עדכון התמונות
+                currentImageIndex = totalImages;
+                initializeImageGallery().then(() => {
+                    updateImage();
+                    
+                    // אנימציית כניסה
+                    container.classList.remove('fade-out');
+                    container.classList.add('fade-in');
+                    
+                    setTimeout(() => {
+                        container.classList.remove('fade-in');
+                    }, 300);
+                });
+                
+                // עדכון הכפתורים
+                document.querySelectorAll('.baby-option').forEach(btn => {
+                    btn.classList.toggle('active', btn.dataset.baby === babyId);
+                });
+                
+                localStorage.setItem('selectedBaby', babyId);
+                calculateAge();
+            }, 300);
+        }
+
+        // הוספת פונקציית initSettings
         function initSettings() {
             const savedSettings = localStorage.getItem('babyAgeSettings');
             if (savedSettings) {
@@ -611,91 +1169,89 @@
                 saveSettings();
             });
 
-            document.addEventListener('click', (e) => {
-                if (!e.target.closest('.settings-panel') && 
-                    !e.target.closest('.settings-toggle')) {
-                    document.querySelector('.settings-panel').classList.remove('open');
-                }
+            // הוספת מאזין לחיצה לכפתור ההגדרות
+            document.querySelector('.settings-toggle').addEventListener('click', () => {
+                document.querySelector('.settings-panel').classList.toggle('open');
             });
         }
 
-        function updateSettingsUI() {
-            document.getElementById('showZeros').checked = settings.showZeros;
-            document.getElementById('showSeconds').checked = settings.showSeconds;
-            document.getElementById('darkMode').checked = settings.darkMode;
-            document.body.classList.toggle('dark-mode', settings.darkMode);
-        }
-
-        function saveSettings() {
-            localStorage.setItem('babyAgeSettings', JSON.stringify(settings));
-        }
-
-        function calculateAge() {
-            const birthDate = new Date(2024, 10, 17, 16, 7);
-            const now = new Date();
-            const diff = now - birthDate;
+        // עדכון פונקציית updateImage
+        function updateImage() {
+            const img = document.getElementById('babyImage');
+            const babyData = babiesData[currentBaby];
+            const newSrc = `${babyData.imgFolder}${currentImageIndex}.jpg`;
             
-            const totalSeconds = Math.floor(diff / 1000);
-            const totalMinutes = Math.floor(diff / (1000 * 60));
-            const totalHours = Math.floor(diff / (1000 * 60 * 60));
-            const totalDays = Math.floor(diff / (1000 * 60 * 60 * 24));
-            const weeks = Math.floor(totalDays / 7);
-            const months = Math.floor(totalDays / 30.44);
-            const years = Math.floor(months / 12);
-
-            const remainingDays = totalDays - (weeks * 7);
-            const hours = totalHours % 24;
-            const minutes = totalMinutes % 60;
-            const seconds = totalSeconds % 60;
-
-            updateDisplay('years', years);
-            updateDisplay('months', months % 12);
-            updateDisplay('weeks', weeks);
-            updateDisplay('days', remainingDays);
-            updateDisplay('hours', hours);
-            updateDisplay('minutes', minutes);
-            
-            if (settings.showSeconds) {
-                updateDisplay('seconds', seconds);
-            }
-
-            // עדכון הסה"כ עם הערך הגבוה ביותר
-            let totalText = 'סה"כ: ';
-            if (years > 0) {
-                totalText += `${years} שנים`;
-            } else if (months > 0) {
-                totalText += `${months} חודשים`;
-            } else if (weeks > 0) {
-                totalText += `${weeks} שבועות`;
-            } else if (remainingDays > 0) {
-                totalText += `${remainingDays} ימים`;
-            } else if (totalHours > 0) {
-                totalText += `${totalHours} שעות`;
-            } else if (totalMinutes > 0) {
-                totalText += `${totalMinutes} דקות`;
-            } else {
-                totalText += `${totalSeconds} שניות`;
-            }
-            document.getElementById('total').textContent = totalText;
-        }
-
-        function updateDisplay(elementId, value) {
-            const element = document.getElementById(elementId);
-            if (!element) return;
-
-            if (!settings.showZeros && value === 0) {
-                element.parentElement.style.display = 'none';
-            } else {
-                element.parentElement.style.display = 'block';
-                const oldValue = parseInt(element.textContent);
-                if (oldValue !== value) {
-                    element.classList.add('update');
-                    setTimeout(() => element.classList.remove('update'), 300);
+            checkImageExists(newSrc).then(exists => {
+                if (exists) {
+                    img.style.opacity = '0';
+                    setTimeout(() => {
+                        img.src = newSrc;
+                        img.style.opacity = '1';
+                    }, 200);
+                } else {
+                    console.error('התמונה לא נמצאה:', newSrc);
+                    img.src = './img/default.jpg';
                 }
-                element.textContent = value;
-            }
+            });
+            
+            document.getElementById('currentImageNum').textContent = currentImageIndex;
+            document.getElementById('totalImages').textContent = totalImages;
         }
 
+        // הוספת פונקציית initializeImageGallery
+        async function initializeImageGallery() {
+            totalImages = await findLastImage();
+            if (totalImages === 0) {
+                console.error('לא נמצאו תמונות בתיקייה');
+                return;
+            }
+            
+            // התחל מהתמונה האחרונה
+            currentImageIndex = totalImages;
+            
+            document.getElementById('totalImages').textContent = totalImages;
+            
+            const prevButton = document.querySelector('.prev-button');
+            const nextButton = document.querySelector('.next-button');
+            
+            // הסרת מאזינים קודמים אם קיימים
+            prevButton.replaceWith(prevButton.cloneNode(true));
+            nextButton.replaceWith(nextButton.cloneNode(true));
+            
+            // הוספת מאזינים חדשים
+            document.querySelector('.prev-button').addEventListener('click', () => changeImage(-1));
+            document.querySelector('.next-button').addEventListener('click', () => changeImage(1));
+
+            // עדכון תמיכה בהחלקה למובייל
+            const photoContainer = document.querySelector('.photo-container');
+            let touchStartX = 0;
+            let touchStartY = 0;
+            
+            photoContainer.addEventListener('touchstart', (e) => {
+                touchStartX = e.touches[0].clientX;
+                touchStartY = e.touches[0].clientY;
+            }, { passive: true });
+            
+            photoContainer.addEventListener('touchend', (e) => {
+                const touchEndX = e.changedTouches[0].clientX;
+                const touchEndY = e.changedTouches[0].clientY;
+                const diffX = touchStartX - touchEndX;
+                const diffY = touchStartY - touchEndY;
+                
+                // בדיקה שההחלקה היא אופקית ולא אנכית
+                if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 50) {
+                    if (diffX > 0) {
+                        changeImage(1);
+                    } else {
+                        changeImage(-1);
+                    }
+                }
+            }, { passive: true });
+
+            updateImage();
+        }
+
+        // הוספת פונקציות addSecondsBox ו-removeSecondsBox
         function addSecondsBox() {
             if (!document.getElementById('seconds')) {
                 const secondsBox = document.createElement('div');
@@ -704,7 +1260,14 @@
                     <span class="age-label">שניות</span>
                     <span class="age-value" id="seconds">0</span>
                 `;
-                document.querySelector('.age-display').appendChild(secondsBox);
+                
+                // הוספה לשורה הקיימת של תיבות הגיל
+                const ageDisplay = document.querySelector('.age-display');
+                ageDisplay.appendChild(secondsBox);
+                
+                // עדכון הגריד
+                const columns = Math.min(7, Math.ceil(window.innerWidth / 120)); // התאמה אוטומטית למסך
+                ageDisplay.style.gridTemplateColumns = `repeat(${columns}, 1fr)`;
             }
         }
 
@@ -715,55 +1278,64 @@
             }
         }
 
-        // אתחול
-        initSettings();
-        calculateAge();
-        setInterval(calculateAge, 1000);
+        // הוספת פונקציית updateSettingsUI
+        function updateSettingsUI() {
+            document.getElementById('showZeros').checked = settings.showZeros;
+            document.getElementById('showSeconds').checked = settings.showSeconds;
+            document.getElementById('darkMode').checked = settings.darkMode;
+            document.body.classList.toggle('dark-mode', settings.darkMode);
+        }
 
-        // הוספת מאזין אירועים לכפתור ההגדרות
-        document.querySelector('.settings-toggle').addEventListener('click', () => {
-            document.querySelector('.settings-panel').classList.toggle('open');
+        // הוספת פונקציית saveSettings
+        function saveSettings() {
+            localStorage.setItem('babyAgeSettings', JSON.stringify(settings));
+        }
+
+        // עדכון פונקציית updateDisplay
+        function updateDisplay(elementId, value) {
+            const element = document.getElementById(elementId);
+            if (!element) return;
+
+            if (!settings.showZeros && value === 0) {
+                element.parentElement.style.display = 'none';
+            } else {
+                element.parentElement.style.display = 'flex';
+                element.textContent = value;
+            }
+        }
+
+        // אתחול
+        document.addEventListener('DOMContentLoaded', () => {
+            // הוספת תפריט הבחירה לDOM
+            const babySelector = document.createElement('div');
+            babySelector.className = 'baby-selector';
+            babySelector.innerHTML = `
+                <div class="baby-option active" data-baby="yosef">יוסף שמעון</div>
+                <div class="baby-option" data-baby="avital">אביטל</div>
+            `;
+            document.body.insertBefore(babySelector, document.body.firstChild);
+
+            // אתחול מאזיני אירועים
+            document.querySelectorAll('.baby-option').forEach(btn => {
+                btn.addEventListener('click', () => switchBaby(btn.dataset.baby));
+            });
+
+            initSettings();
+            switchBaby(currentBaby);
+            calculateAge();
+            setInterval(calculateAge, 1000);
+            
+            if (settings.showSeconds) {
+                addSecondsBox();
+            }
+
+            renderMilestones();
+            initGrowthChart();
+            initializeImageGallery();
+            checkBirthday();
         });
 
-        // בדיקה האם היום יום הולדת
-        function checkBirthday() {
-            const now = new Date();
-            const birthDate = new Date(2024, 10, 17);
-            
-            if (now.getDate() === birthDate.getDate() && 
-                now.getMonth() === birthDate.getMonth()) {
-                document.body.classList.add('birthday-mode');
-                createConfetti();
-                if (!document.getElementById('birthday-message')) {
-                    const message = document.createElement('div');
-                    message.id = 'birthday-message';
-                    message.style.cssText = 'position: fixed; top: 20px; right: 20px; background: #fff; padding: 15px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); z-index: 1000;';
-                    message.textContent = '🎉 יום הולדת שמח! 🎂';
-                    document.body.appendChild(message);
-                }
-            } else {
-                document.body.classList.remove('birthday-mode');
-            }
-        }
-
-        // יצירת אפקט קונפטי
-        function createConfetti() {
-            for (let i = 0; i < 50; i++) {
-                const confetti = document.createElement('div');
-                confetti.className = 'confetti';
-                confetti.style.left = Math.random() * 100 + 'vw';
-                confetti.style.animationDelay = Math.random() * 3 + 's';
-                confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
-                document.body.appendChild(confetti);
-                
-                setTimeout(() => confetti.remove(), 4000);
-            }
-        }
-
-        // הוספת הקוד החדש בתחילת הסקריפט
-        let currentImageIndex = 1;
-        let totalImages = 1;
-
+        // עחליף את פונקציית findLastImage
         function checkImageExists(url) {
             return new Promise((resolve) => {
                 const img = new Image();
@@ -775,53 +1347,14 @@
 
         async function findLastImage() {
             let lastIndex = 1;
-            while (await checkImageExists(`./img/${lastIndex}.jpg`)) {
+            const babyData = babiesData[currentBaby];
+            while (await checkImageExists(`${babyData.imgFolder}${lastIndex}.jpg`)) {
                 lastIndex++;
             }
-            return lastIndex - 1;
+            return Math.max(1, lastIndex - 1);
         }
 
-        async function initializeImageGallery() {
-            totalImages = await findLastImage();
-            if (totalImages === 0) {
-                console.error('לא נמצאו תמונות בתיקייה');
-                return;
-            }
-            
-            document.getElementById('totalImages').textContent = totalImages;
-            
-            const prevButton = document.querySelector('.prev-button');
-            const nextButton = document.querySelector('.next-button');
-            
-            prevButton.addEventListener('click', () => changeImage(-1));
-            nextButton.addEventListener('click', () => changeImage(1));
-
-            // הצג את התמונה האחרונה כברירת מחדל
-            currentImageIndex = totalImages;
-            updateImage();
-
-            // הוספת תמיכה בהחלקה (swipe) למובייל
-            let touchStartX = 0;
-            const photoContainer = document.querySelector('.photo-container');
-            
-            photoContainer.addEventListener('touchstart', (e) => {
-                touchStartX = e.touches[0].clientX;
-            }, false);
-            
-            photoContainer.addEventListener('touchend', (e) => {
-                const touchEndX = e.changedTouches[0].clientX;
-                const diff = touchStartX - touchEndX;
-                
-                if (Math.abs(diff) > 50) { // מינימום מרחק להחלקה
-                    if (diff > 0) { // החלקה שמאלה
-                        changeImage(1);
-                    } else { // החלקה ימינה
-                        changeImage(-1);
-                    }
-                }
-            }, false);
-        }
-
+        // נוסיף את פונקציית changeImage החסרה
         function changeImage(direction) {
             currentImageIndex += direction;
             if (currentImageIndex > totalImages) currentImageIndex = 1;
@@ -829,41 +1362,109 @@
             updateImage();
         }
 
-        function updateImage() {
-            const img = document.getElementById('babyImage');
-            const newSrc = `./img/${currentImageIndex}.jpg`;
-            
-            // אנימציית fade
-            img.style.opacity = '0';
-            setTimeout(() => {
-                img.src = newSrc;
-                img.style.opacity = '1';
-            }, 200);
-            
-            document.getElementById('currentImageNum').textContent = currentImageIndex;
+        // נוסיף את פונקציית renderMilestones החסרה
+        function renderMilestones() {
+            const milestones = [
+                {
+                    date: '2024-11-17',
+                    title: 'לידה 👶',
+                    details: ['משקל: 3.750 ק"ג', 'גובה: 50 ס"מ']
+                },
+                {
+                    date: '2024-11-24',
+                    title: 'ברית מילה',
+                    details: ['משקל: 3.750 ק"ג', 'גובה: 50 ס"מ']
+                }
+            ];
+
+            const timeline = document.querySelector('.timeline');
+            if (!timeline) return;
+
+            timeline.innerHTML = milestones.map(milestone => `
+                <div class="milestone" data-date="${new Date(milestone.date).toLocaleDateString('he-IL')}">
+                    <div class="milestone-content">
+                        <h3>${milestone.title}</h3>
+                        ${milestone.details.map(detail => `<p>${detail}</p>`).join('')}
+                    </div>
+                </div>
+            `).join('');
         }
 
-        // הוספת מאזין למקשי המקלדת
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'ArrowLeft') changeImage(1);
-            if (e.key === 'ArrowRight') changeImage(-1);
-        });
+        // נוסיף את פונקציית initGrowthChart החסרה
+        function initGrowthChart() {
+            const ctx = document.getElementById('growthChart');
+            if (!ctx) return;
 
-        // קוסיף גם סגנונות חדשים לאנימציית fade
-        const styleSheet = document.createElement('style');
-        styleSheet.textContent = `
-            .photo-container img {
-                transition: opacity 0.2s ease-in-out;
+            const data = {
+                weight: [
+                    { date: '2024-11-17', value: 3.75 }
+                ],
+                height: [
+                    { date: '2024-11-17', value: 50 }
+                ]
+            };
+
+            let currentChart = null;
+
+            function createChart(type) {
+                if (currentChart) {
+                    currentChart.destroy();
+                }
+
+                currentChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: data[type].map(d => new Date(d.date).toLocaleDateString('he-IL')),
+                        datasets: [{
+                            label: type === 'weight' ? 'משקל (ק"ג)' : 'גובה (ס"מ)',
+                            data: data[type].map(d => d.value),
+                            borderColor: '#2196F3',
+                            tension: 0.4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: false
+                            }
+                        }
+                    }
+                });
             }
-        `;
-        document.head.appendChild(styleSheet);
 
-        // קריאה לפונקציית האתחול
-        initializeImageGallery();
+            document.querySelectorAll('.chart-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.chart-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    createChart(btn.dataset.type);
+                });
+            });
 
-        // הפעלת בדיקת יום הולדת
-        checkBirthday();
-        setInterval(checkBirthday, 1000 * 60 * 60); // בדיקה כל שעה
+            createChart('weight');
+        }
+
+        // הוספת תמיכה בחצי מקלדת
+        document.addEventListener('keydown', (e) => {
+            // חצים לניווט בתמונות
+            if (e.key === 'ArrowLeft') {
+                changeImage(1);
+            } else if (e.key === 'ArrowRight') {
+                changeImage(-1);
+            }
+            // מעבר בין ילדים עם Tab
+            else if (e.key === 'Tab') {
+                e.preventDefault();
+                const currentIndex = currentBaby === 'yosef' ? 1 : 0;
+                const nextBaby = currentIndex === 0 ? 'yosef' : 'avital';
+                switchBaby(nextBaby);
+            }
+        });
     </script>
 </body>
 </html>
